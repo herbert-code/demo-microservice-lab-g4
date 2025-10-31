@@ -7,7 +7,7 @@ on:
     branches: ["main"]
 
 env:
-  IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/demo-microservice-lab
+  IMAGE_NAME: ${{ secrets.DOCKERHUB_USERNAME }}/demo-microservice-lab-g4
   APP_PORT: ${{ secrets.APP_PORT || 3000 }}
 
 jobs:
@@ -81,7 +81,7 @@ jobs:
       - name: Desplegar contenedor en EC2
         env:
           HOST: ${{ secrets.EC2_HOST }}
-          IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/demo-microservice-lab:latest
+          IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/demo-microservice-lab-g4:latest
           APP_PORT: ${{ env.APP_PORT }}
         run: |
           set -euo pipefail
@@ -96,10 +96,10 @@ jobs:
           fi
 
           docker network inspect appnet >/dev/null 2>&1 || docker network create appnet
-          docker ps -q --filter "name=demo-microservice-lab" | grep -q . && docker stop demo-microservice-lab || true
-          docker ps -aq --filter "name=demo-microservice-lab" | grep -q . && docker rm demo-microservice-lab || true
+          docker ps -q --filter "name=demo-microservice-lab-g4" | grep -q . && docker stop demo-microservice-lab-g4 || true
+          docker ps -aq --filter "name=demo-microservice-lab-g4" | grep -q . && docker rm demo-microservice-lab-g4 || true
 
           docker pull "$IMAGE"
-          docker run -d --name demo-microservice-lab --restart unless-stopped \
+          docker run -d --name demo-microservice-lab-g4 --restart unless-stopped \
             --network appnet -p 80:"$APP_PORT" "$IMAGE"
           EOF
