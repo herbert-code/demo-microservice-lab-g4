@@ -59,12 +59,12 @@ jobs:
         run: |
           set -euo pipefail
           umask 077
-          cat > id.key <<'EOF'
+          cat > id_rsa <<'EOF'
           ${{ secrets.EC2_SSH_KEY }}
           EOF
-          sed -i 's/\r$//' id.key
+          sed -i 's/\r$//' id_rsa
           eval "$(ssh-agent -s)"
-          ssh-add id.key
+          ssh-add id_rsa
           ssh-add -l
       - name: Ver fingerprint de la clave cargada en el agent
         run: |
