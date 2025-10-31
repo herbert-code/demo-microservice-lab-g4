@@ -52,20 +52,10 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y openssh-client
 
       - name: Cargar clave privada en ssh-agent
-        #uses: webfactory/ssh-agent@v0.9.0
-        #with:
-        #  ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          umask 077
-          cat > id_rsa <<'EOF'
-          ${{ secrets.EC2_SSH_KEY }}
-          EOF
-          sed -i 's/\r$//' id_rsa
-          eval "$(ssh-agent -s)"
-          ssh-add id_rsa
-          ssh-add -l
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
       - name: Ver fingerprint de la clave cargada en el agent
         run: |
           set -euo pipefail
